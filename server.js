@@ -24,17 +24,38 @@ app.listen(PORT, () => {
 });
 
 //GET a list of all candidates
-// db.query(`SELECT * FROM candidates`, (err,rows) => {
-//     console.log(rows);
+// app.get('/api/candidates',(req,res)=>{
+//     const sql = `SELECT * FROM candidates`;
+
+//     db.query(sql, (err,rows) => {
+//         if(err){
+//             res.status(500).json({error: err.message});
+//             return;
+//         }
+//         res.json({
+//             message:'success',
+//             data: rows
+//         })
+//      });
 // });
 
 //GET a single candidate
-// db.query(`SELECT * FROM candidates WHERE id = 1`, (err,row) => {
-//     if(err){
-//         console.log(err)
-//     }
-//     console.log(row);
-// });
+app.get('/api/candidate/:id',(req,res)=>{
+    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+
+    db.query(sql, params, (err,row) => {
+        if(err){
+            res.status(400).json({error: err.message});
+            return;
+        }
+        res.json({
+            message:'success',
+            data: row
+        })
+        console.log(row);
+    });
+});
 
 //Delete a candidate   | 1 == extra param that "?" references
 // db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, results) => {
@@ -45,17 +66,17 @@ app.listen(PORT, () => {
 // });
 
 //Create a candidate
-const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected)
-VALUES (?,?,?,?)`;
+// const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected)
+// VALUES (?,?,?,?)`;
 
-const params = [1, 'Ronald', 'Firbank', 1];
+// const params = [1, 'Ronald', 'Firbank', 1];
 
-db.query(sql, params,(err,result) => {
-if(err){
-    console.log(err)
-}
-console.log(result);
-});
+// db.query(sql, params,(err,result) => {
+// if(err){
+//     console.log(err)
+// }
+// console.log(result);
+// });
 
 //Default response for any other request(Not Found)
 app.use((req,res) => {
